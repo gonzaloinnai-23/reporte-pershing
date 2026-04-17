@@ -589,7 +589,9 @@ function processFile(file) {
   const reader = new FileReader();
   reader.onload = e => {
     const text = e.target.result;
-    const rows = text.trim().split('\n').map(r => r.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
+    const firstLine = text.split('\n')[0];
+    const sep = firstLine.includes('\t') ? '\t' : ',';
+    const rows = text.trim().split('\n').map(r => r.split(sep).map(c => c.trim().replace(/^"|"$/g,'')));
     if (rows.length < 2) return;
     csvHeaders = rows[0];
     parsedCSV = rows.slice(1).map(r => { const o = {}; csvHeaders.forEach((h,i) => o[h] = r[i]||''); return o; });
